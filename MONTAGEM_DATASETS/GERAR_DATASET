@@ -1,0 +1,57 @@
+import numpy as np
+import pandas as pd
+
+# paths = [
+#     "data\mariana\classificado\careta.csv",
+#     "data\mariana\classificado/fundo.csv",
+#     "data\mariana\classificado\olhar.csv",
+#     "data\mariana\classificado\picada_dupla_1_500_2.csv",
+#     "data\mariana\classificado\picada_dupla_1_500_3.csv",
+#     "data\mariana\classificado\picada_dupla_1_500.csv",
+#     "data\mariana\classificado\piscada_dupla_2_500_2.csv",
+#     "data\mariana\classificado\piscada_dupla_2_500_3.csv",
+#     "data\mariana\classificado\piscada_dupla_2_500.csv",
+#     "data\pedro\classificado\careta_pedro.csv",
+#     "data\pedro\classificado/fundo_pedro.csv",
+#     "data\pedro\classificado\olhar_pedro.csv",
+#     "data\pedro\classificado\piscada_dupla_1_pedro_2.csv",
+#     "data\pedro\classificado\piscada_dupla_1_pedro_3.csv",
+#     "data\pedro\classificado\piscada_dupla_1_pedro.csv",
+#     "data\pedro\classificado\piscada_dupla_2_pedro_2.csv",
+#     "data\pedro\classificado\piscada_dupla_2_pedro_3.csv",
+#     "data\pedro\classificado\piscada_dupla_2_pedro.csv"
+# ]
+
+
+paths = [
+     "dataset_mariana.csv",
+     "dataset_pedro_f.csv"
+ ]
+
+
+
+
+SEQ_LEN = 500  # tamanho final por janela (amostras)
+
+dfs = []
+offset = 0
+
+for p in paths:
+    d = pd.read_csv(p)
+
+    required_cols = {"t_s", "sinal_filtrado", "janela", "classificacao"}
+    missing = required_cols - set(d.columns)
+    if missing:
+        raise ValueError(f"CSV {p} sem colunas obrigatórias: {missing}")
+
+    d["janela"] = d["janela"].astype(int)
+    d["janela"] = d["janela"] + offset
+
+    # CORRETO: +1 para não repetir o último ID
+    offset = int(d["janela"].max())+1
+
+    dfs.append(d)
+
+df = pd.concat(dfs, ignore_index=True)
+df = df.sort_values(["janela", "t_s"], kind="mergesort").reset_index(drop=True)
+df.to_csv("dataset_juntos.csv", index=False, encoding="utf-8", sep=",")

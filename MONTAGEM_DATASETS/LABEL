@@ -1,0 +1,19 @@
+import pandas as pd
+import numpy as np
+
+ARQUIVO_SAIDA = "data\mariana\classificado/careta.csv"
+
+df = pd.read_csv("data\mariana\janelamento/careta.csv")
+
+df["classificacao"] = 0
+
+#for i in range(df.shape[0]):
+#    if ((df["janela"].iloc[i] == 6) or (df["janela"].iloc[i] == 11) or (df["janela"].iloc[i] == 16) or (df["janela"].iloc[i] == 20) 
+#        or (df["janela"].iloc[i] == 21) or (df["janela"].iloc[i] == 25) or (df["janela"].iloc[i] == 30) or (df["janela"].iloc[i] == 35)
+#        or (df["janela"].iloc[i] == 40) or (df["janela"].iloc[i] == 45) or (df["janela"].iloc[i] == 50) or (df["janela"].iloc[i] == 55)):        
+#        #print(f"índice: {i}")
+#        df.loc[i, "classificacao"] = 1
+
+  
+#print(f"{df['classificacao'].iloc[50]}")
+df.to_csv(ARQUIVO_SAIDA, index=False)
